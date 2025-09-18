@@ -8,18 +8,52 @@ import { Image } from 'expo-image';
 export default function BookDetailsScreen() {
   const params = useLocalSearchParams();
   const [bookData, setBookData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    if (params.bookData) {
-      try {
-        const parsedData = JSON.parse(params.bookData as string);
-        setBookData(parsedData);
-      } catch (error) {
-        console.error('解析图书数据失败:', error);
+    // 处理从扫码页面传递的参数
+    if (params.isLoading === 'true') {
+      setIsLoading(true);
+      setError(null);
+    } else if (params.isLoading === 'false') {
+      setIsLoading(false);
+      
+      // 处理错误信息
+      if (params.error) {
+        setError(params.error as string);
+      } else if (params.bookData) {
+        try {
+          const parsedData = JSON.parse(params.bookData as string);
+          setBookData(parsedData);
+        } catch (error) {
+          console.error('解析图书数据失败:', error);
+          setError('解析图书数据失败');
+        }
       }
     }
-  }, [params.bookData]);
+  }, [params]);
 
+  // 显示加载状态
+  if (isLoading) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText type="title">正在查询图书信息...</ThemedText>
+      </ThemedView>
+    );
+  }
+  
+  // 显示错误信息
+  if (error) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText type="title">查询失败</ThemedText>
+        <ThemedText style={styles.errorText}>{error}</ThemedText>
+      </ThemedView>
+    );
+  }
+  
+  // 如果没有图书数据且没有错误，显示默认加载状态
   if (!bookData) {
     return (
       <ThemedView style={styles.container}>
@@ -92,6 +126,14 @@ export default function BookDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    marginTop: 10,
+    color: '#e74c3c',
+    textAlign: 'center',
   },
   content: {
     padding: 20,

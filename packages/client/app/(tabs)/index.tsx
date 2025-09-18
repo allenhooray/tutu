@@ -10,6 +10,7 @@ import { Api } from 'api/src/Api';
 export default function HomeScreen() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanning, setScanning] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // 创建axios实例
   const axiosInstance = axios.create({
@@ -39,16 +40,33 @@ export default function HomeScreen() {
   };
 
   const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
+    // 防止多次触发扫码处理
+    if (isProcessing) return;
+    
+    setIsProcessing(true);
     setScanning(false);
 
+    // 立即导航到详情页并显示loading态
+    router.push({
+      pathname: '/book-details',
+      params: { isbn: data, isLoading: 'true' }
+    });
+
     try {
-      const response = await api.books.queryBookByIsbn(data);
-      router.push({
-        pathname: '/book-details',
-        params: { bookData: JSON.stringify(response.data) }
-      });
+        const response = await api.books.queryBookByIsbn(data);
+        // 重新导航到详情页，传递实际的图书数据
+        router.replace({
+          pathname: '/book-details',
+          params: { bookData: JSON.stringify(response.data), isLoading: 'false' }
+        });
     } catch (error) {
-      Alert.alert('查询失败', '无法查询到该图书信息，请重试。');
+      // 导航到详情页，显示错误信息
+      router.replace({
+        pathname: '/book-details',
+        params: { error: '无法查询到该图书信息，请重试。', isLoading: 'false' }
+      });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
