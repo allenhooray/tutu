@@ -1,0 +1,15 @@
+{
+    "name": "api",
+    "version": "1.0.0",
+    "main": "./src/index.ts",
+    "type": "module",
+    "scripts": {
+        "gen": "rm -rf src && node gen.js"
+    },
+    "peerDependencies": {
+        "axios": "^1.6.7"
+    },
+    "devDependencies": {
+        "swagger-typescript-api": "^13.0.11"
+    }
+}
