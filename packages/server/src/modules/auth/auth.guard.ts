@@ -12,6 +12,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
+    const response = context.switchToHttp().getResponse();
     const authorizationHeader = request.headers.authorization;
 
     try {
@@ -23,15 +24,16 @@ export class AuthGuard implements CanActivate {
       );
 
       if (!isAuthenticated) {
+        // 设置 WWW-Authenticate 响应头，使浏览器弹出鉴权窗口
+        response.set('WWW-Authenticate', 'Basic realm="API Access"');
         throw new UnauthorizedException('Invalid username or password');
       }
 
       return true;
     } catch (error) {
-      if (error instanceof UnauthorizedException) {
-        throw error;
-      }
-      throw new UnauthorizedException('Authentication failed');
+      // 对于所有未授权错误，都设置 WWW-Authenticate 响应头
+      response.set('WWW-Authenticate', 'Basic realm="API Access"');
+      throw error;
     }
   }
 }
