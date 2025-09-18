@@ -13,7 +13,7 @@ export default function HomeScreen() {
 
   // 创建axios实例
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000', // 根据实际后端API地址调整
+    baseURL: 'http://192.168.100.136:3000', // 根据实际后端API地址调整
     timeout: 10000,
   });
 
