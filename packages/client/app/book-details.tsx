@@ -63,7 +63,7 @@ export default function BookDetailsScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
       <ThemedView style={styles.content}>
         <ThemedText type="title" style={styles.title}>{bookData.title || '未获取到书名'}</ThemedText>
         
@@ -124,8 +124,11 @@ export default function BookDetailsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
+  },
+  container: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
