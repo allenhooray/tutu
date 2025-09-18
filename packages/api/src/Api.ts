@@ -96,7 +96,7 @@ export class HttpClient<SecurityDataType = unknown> {
       headers: {
         ...((method &&
           this.instance.defaults.headers[
-          method.toLowerCase() as keyof HeadersDefaults
+            method.toLowerCase() as keyof HeadersDefaults
           ]) ||
           {}),
         ...(params1.headers || {}),
@@ -199,10 +199,10 @@ export class Api<
    * No description
    *
    * @tags App
-   * @name AppControllerGetHello
+   * @name GetHello
    * @request GET:/
    */
-  appControllerGetHello = (params: RequestParams = {}) =>
+  getHello = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/`,
       method: "GET",
@@ -214,13 +214,11 @@ export class Api<
      * No description
      *
      * @tags Books
-     * @name BooksControllerQueryBookByIsbn
+     * @name QueryBookByIsbn
+     * @summary 根据 ISBN 查询图书
      * @request GET:/books/{isbn}
      */
-    booksControllerQueryBookByIsbn: (
-      isbn: string,
-      params: RequestParams = {},
-    ) =>
+    queryBookByIsbn: (isbn: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/books/${isbn}`,
         method: "GET",

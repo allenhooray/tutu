@@ -16,7 +16,9 @@ async function bootstrap() {
     .build();
 
   // 创建文档
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    operationIdFactory: (_, methodKey) => methodKey,
+  });
 
   // 挂载 Swagger UI
   SwaggerModule.setup('api-docs', app, document);
