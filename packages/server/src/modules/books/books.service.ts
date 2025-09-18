@@ -42,7 +42,7 @@ const WORKFLOW_ID = '7551100698411597875';
 
 @Injectable()
 export class BooksService {
-  constructor(private readonly cozeService: CozeService) {}
+  constructor(private readonly cozeService: CozeService) { }
 
   async queryBookByIsbn(isbn: string): Promise<BookInfo> {
     const resp = await this.cozeService.cozeApi.workflows.runs.create({
@@ -57,10 +57,11 @@ export class BooksService {
       ) as WorkflowRunRespData;
       const bookInfo = JSON.parse(
         bookInfoDataString?.output || '{}',
-      ) as BookInfo;
-      return bookInfo;
+      ) as BookInfo | null;
+      return bookInfo || {};
     } catch (error) {
-      return {} as BookInfo;
+      console.log('error', error);
+      return {};
     }
   }
 }
