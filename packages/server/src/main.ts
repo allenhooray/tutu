@@ -12,7 +12,8 @@ async function bootstrap() {
     .setDescription('供前端调用的接口文档')
     .setVersion(packageJson.version)
     .addTag('users') // 添加标签
-    .addBearerAuth() // 如果有认证
+    .addBearerAuth() // Bearer 认证
+    .addBasicAuth() // Basic Auth 认证
     .build();
 
   // 创建文档
