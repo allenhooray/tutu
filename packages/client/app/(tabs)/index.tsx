@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import axios from 'axios';
 import { Api } from 'api/src/Api';
+import { debounce } from 'lodash';
 
 export default function HomeScreen() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -15,7 +16,7 @@ export default function HomeScreen() {
   // 创建axios实例
   const axiosInstance = axios.create({
     baseURL: 'http://192.168.100.136:3000', // 根据实际后端API地址调整
-    timeout: 10000,
+    timeout: 1000000,
   });
 
   const api = new Api(axiosInstance);
@@ -39,10 +40,10 @@ export default function HomeScreen() {
     }
   };
 
-  const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
+  const handleBarCodeScanned = debounce(async ({ type, data }: { type: string; data: string }) => {
     // 防止多次触发扫码处理
     if (isProcessing) return;
-    
+
     setIsProcessing(true);
     setScanning(false);
 
@@ -53,12 +54,12 @@ export default function HomeScreen() {
     });
 
     try {
-        const response = await api.books.queryBookByIsbn(data);
-        // 重新导航到详情页，传递实际的图书数据
-        router.replace({
-          pathname: '/book-details',
-          params: { bookData: JSON.stringify(response.data), isLoading: 'false' }
-        });
+      const response = await api.books.queryBookByIsbn(data);
+      // 重新导航到详情页，传递实际的图书数据
+      router.replace({
+        pathname: '/book-details',
+        params: { bookData: JSON.stringify(response.data), isLoading: 'false' }
+      });
     } catch (error) {
       // 导航到详情页，显示错误信息
       router.replace({
@@ -68,7 +69,7 @@ export default function HomeScreen() {
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, 2000);
 
   return (
     <ThemedView style={styles.container}>
