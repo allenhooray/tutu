@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { CameraView, Camera } from 'expo-camera';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import axios from 'axios';
@@ -10,24 +10,24 @@ import { Api } from 'api/src/Api';
 export default function HomeScreen() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanning, setScanning] = useState(false);
-  
+
   // 创建axios实例
   const axiosInstance = axios.create({
     baseURL: 'http://localhost:3000', // 根据实际后端API地址调整
     timeout: 10000,
   });
-  
+
   const api = new Api(axiosInstance);
 
   const requestCameraPermission = async () => {
-    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    const { status } = await Camera.requestCameraPermissionsAsync();
     setHasPermission(status === 'granted');
-    
+
     if (status !== 'granted') {
       Alert.alert('需要相机权限', '请在设备设置中允许应用访问相机以扫描条形码。');
       return false;
     }
-    
+
     return true;
   };
 
@@ -40,7 +40,7 @@ export default function HomeScreen() {
 
   const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
     setScanning(false);
-    
+
     try {
       const response = await api.books.queryBookByIsbn(data);
       router.push({
@@ -55,14 +55,17 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       {scanning ? (
-        <BarCodeScanner
-          onBarCodeScanned={handleBarCodeScanned}
+        <CameraView
+          onBarcodeScanned={handleBarCodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: ['qr', 'ean13', 'ean8', 'upc_a', 'upc_e'],
+          }}
           style={styles.scanner}
         />
       ) : (
         <ThemedView style={styles.content}>
           <ThemedText type="title" style={styles.title}>图书条形码扫描</ThemedText>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.scanButton}
             onPress={handleScanPress}
             activeOpacity={0.8}
