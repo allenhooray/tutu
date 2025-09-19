@@ -8,7 +8,13 @@ export class VerificationCodesService {
   constructor(private prisma: PrismaService) {}
 
   // 生成验证码
-  async generateCode(provider: VerificationCodeProvider, target: string) {
+  async generateCode({
+    provider,
+    target,
+  }: {
+    provider: VerificationCodeProvider;
+    target: string;
+  }) {
     const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6位随机码
     const expiresAt = addMinutes(new Date(), 5); // 5分钟有效
 
@@ -16,7 +22,6 @@ export class VerificationCodesService {
       data: { provider, target, code, expiresAt },
     });
 
-    // TODO: 调用短信/邮箱服务发送 code
     return { success: true };
   }
 

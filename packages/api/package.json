@@ -10,6 +10,6 @@
         "axios": "^1.6.7"
     },
     "devDependencies": {
-        "swagger-typescript-api": "^13.0.11"
+        "swagger-typescript-api": "^13.2.13"
     }
 }
