@@ -1,10 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'generated/prisma';
-
-interface TokenData {
-  accessToken: string;
-  refreshToken?: string;
-}
+import { TokenData } from '../oauth-tokens/oauth-tokens.service';
 
 @Injectable()
 export class OAuthService {
@@ -12,19 +7,23 @@ export class OAuthService {
     // TODO: 返回第三方 OAuth 登录 URL
   }
 
-  async getToken(provider: string, code: string): Promise<TokenData> {
-    // TODO: 使用 code 获取 access_token / refresh_token
-    return { accessToken: 'accessToken' };
-  }
-
-  async getUserInfo(provider: string, accessToken: string): Promise<User> {
+  async getOAuthUserInfo(
+    provider: string,
+    accessToken: string,
+  ): Promise<{
+    providerId: string;
+    name?: string;
+    avatarUrl?: string;
+    email?: string;
+    phone?: string;
+  }> {
     // TODO: 获取用户信息
     return {
-      id: 'id',
+      providerId: '',
       name: 'name',
-      email: 'email',
       avatarUrl: 'avatarUrl',
-      createdAt: new Date(),
+      email: 'email',
+      phone: 'phone',
     };
   }
 }

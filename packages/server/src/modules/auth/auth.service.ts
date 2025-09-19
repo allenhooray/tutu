@@ -75,6 +75,7 @@ export class AuthService {
         phone,
         avatarUrl: DEFAULT_AVATAR_URL,
       });
+      // 保存用户身份
       await this.usersService.createIdentity({
         provider,
         userId: newUser.id,
@@ -83,30 +84,55 @@ export class AuthService {
     }
   }
 
-  // async loginWithOAuth(provider: OAuthProvider, code: string) {
-  //   const tokenData = await this.oauthService.getToken(provider, code);
-  //   const userInfo = await this.oauthService.getUserInfo(
-  //     provider,
-  //     tokenData.accessToken,
-  //   );
+  async loginWithOAuth({
+    provider,
+    code,
+  }: {
+    provider: OAuthProvider;
+    code: string;
+  }) {
+    const tokenData = await this.oauthTokensService.createToken({
+      provider,
+      code,
+    });
+    const oauthUserInfo = await this.oauthService.getOAuthUserInfo(
+      provider,
+      tokenData.accessToken,
+    );
 
-  //   // 查找或创建用户
-  //   let user = await this.usersService.findIdentity(provider, pus);
-  //   if (!user) {
-  //     user = await this.usersService.createUser({
-  //       name: userInfo.name,
-  //       email: userInfo.email ?? undefined,
-  //       avatarUrl: userInfo.avatarUrl ?? undefined,
-  //     });
-  //     await this.usersService.createIdentity(provider, user.id, userInfo.id);
-  //   }
+    // 查找或创建用户
+    const user = await this.usersService.findUserByIdentity({
+      provider,
+      providerUid: oauthUserInfo.providerId,
+    });
 
-  //   // 保存 OAuth token
-  //   await this.oauthTokensService.createToken(user.id, provider, tokenData);
-
-  //   // 返回 JWT 或 session
-  //   return this.generateJWT(user);
-  // }
+    if (user) {
+      return this.generateJWT(user);
+    } else {
+      const username = generateSemanticUsername(
+        oauthUserInfo.email ?? oauthUserInfo.phone ?? '',
+      );
+      const newUser = await this.usersService.createUser({
+        name: 'New User',
+        username,
+        email: oauthUserInfo.email ?? null,
+        phone: oauthUserInfo.phone ?? null,
+        avatarUrl: DEFAULT_AVATAR_URL,
+      });
+      // 保存用户身份
+      await this.usersService.createIdentity({
+        provider,
+        userId: newUser.id,
+      });
+      // 保存 OAuth token
+      await this.oauthTokensService.createToken(
+        newUser.id,
+        provider,
+        tokenData,
+      );
+      return this.generateJWT(newUser);
+    }
+  }
 
   private generateJWT(user: User) {
     // TODO: 签发 JWT

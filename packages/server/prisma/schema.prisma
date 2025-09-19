@@ -59,15 +59,17 @@ model User {
 /// 登录方式表
 /// -------------------------------
 model Identity {
-  id         String           @id @default(cuid())
-  userId     String
-  user       User             @relation(fields: [userId], references: [id])
-  provider   IdentityProvider // 使用 enum
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  provider    IdentityProvider // 使用 enum
+  providerUid String?
   // providerUid String
-  credential String? // 密码 hash 或空
-  createdAt  DateTime         @default(now())
+  credential  String? // 密码 hash 或空
+  createdAt   DateTime         @default(now())
 
   @@unique([userId, provider])
+  @@unique([provider, providerUid])
 }
 
 /// -------------------------------
@@ -84,6 +86,8 @@ model OAuthToken {
   expiresAt    DateTime // access_token 过期时间
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+
+  @@unique([userId, provider])
 }
 
 /// -------------------------------
