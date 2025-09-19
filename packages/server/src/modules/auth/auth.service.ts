@@ -1,55 +1,67 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+import { OAuthService } from './oauth.service';
+import { OAuthTokensService } from '../oauth-tokens/oauth-tokens.service';
+import { VerificationCodesService } from '../verification-codes/verification-codes.service';
 
 @Injectable()
 export class AuthService {
-  // 默认用户名和密码均为 admin
-  private readonly DEFAULT_USERNAME = 'admin';
-  private readonly DEFAULT_PASSWORD = 'admin';
+  constructor(
+    private usersService: UsersService,
+    private oauthService: OAuthService,
+    private oauthTokensService: OAuthTokensService,
+    private verificationCodesService: VerificationCodesService,
+  ) {}
 
-  /**
-   * 验证用户凭证
-   * @param username 用户名
-   * @param password 密码
-   * @returns 是否验证成功
-   */
-  validateCredentials(username: string, password: string): boolean {
-    return (
-      username === this.DEFAULT_USERNAME && password === this.DEFAULT_PASSWORD
+  async loginWithOAuth(provider: 'GOOGLE' | 'FEISHU', code: string) {
+    const tokenData = await this.oauthService.getToken(provider, code);
+    const userInfo = await this.oauthService.getUserInfo(
+      provider,
+      tokenData.access_token,
     );
+
+    // 查找或创建用户
+    let user = await this.usersService.findByProvider(provider, userInfo.id);
+    if (!user) {
+      user = await this.usersService.createUser({
+        name: userInfo.name,
+        email: userInfo.email,
+        avatarUrl: userInfo.avatar,
+      });
+      await this.usersService.createIdentity(user.id, provider, userInfo.id);
+    }
+
+    // 保存 OAuth token
+    await this.oauthTokensService.createToken(user.id, provider, tokenData);
+
+    // 返回 JWT 或 session
+    return this.generateJWT(user);
   }
 
-  /**
-   * 从 Authorization 头中提取凭证
-   * @param authorizationHeader Authorization 头信息
-   * @returns 包含用户名和密码的对象
-   */
-  extractCredentials(authorizationHeader: string): {
-    username: string;
-    password: string;
-  } {
-    if (!authorizationHeader) {
-      throw new UnauthorizedException('Authorization header is missing');
+  async loginWithVerificationCode(
+    provider: 'PHONE' | 'EMAIL',
+    target: string,
+    code: string,
+  ) {
+    const valid = await this.verificationCodesService.verifyCode(
+      provider,
+      target,
+      code,
+    );
+    if (!valid.success) throw new Error('验证码无效');
+
+    // 查找或创建用户
+    let user = await this.usersService.findByTarget(provider, target);
+    if (!user) {
+      user = await this.usersService.createUser({ name: target });
+      await this.usersService.createIdentity(user.id, provider, target);
     }
 
-    const [type, credentials] = authorizationHeader.split(' ');
+    return this.generateJWT(user);
+  }
 
-    if (type !== 'Basic' || !credentials) {
-      throw new UnauthorizedException('Invalid authorization format');
-    }
-
-    try {
-      const decodedCredentials = Buffer.from(credentials, 'base64').toString(
-        'utf-8',
-      );
-      const [username, password] = decodedCredentials.split(':');
-
-      if (!username || !password) {
-        throw new UnauthorizedException('Invalid credentials format');
-      }
-
-      return { username, password };
-    } catch (error) {
-      throw new UnauthorizedException('Failed to decode credentials');
-    }
+  private generateJWT(user: any) {
+    // TODO: 签发 JWT
+    return { access_token: 'fake-jwt', user };
   }
 }

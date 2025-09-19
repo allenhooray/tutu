@@ -89,5 +89,5 @@ model VerificationCode {
   expiresAt DateTime
   createdAt DateTime         @default(now())
 
-  @@unique([provider, target, code])
+  @@unique([provider, target, code], name: "provider_target_code")
 }
