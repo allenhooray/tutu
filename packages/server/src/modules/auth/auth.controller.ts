@@ -1,7 +1,11 @@
 import { Controller, Post, Body, Query, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { OAuthService } from './oauth.service';
-import { VerificationCodeProvider, OAuthProvider } from 'generated/prisma';
+import {
+  VerificationCodeProvider,
+  OAuthProvider,
+  User,
+} from 'generated/prisma';
 
 @Controller('auth')
 export class AuthController {
@@ -11,8 +15,27 @@ export class AuthController {
   ) {}
 
   @Post('login/password')
-  async loginPassword(@Body() body: { email: string; password: string }) {
-    return this.authService.loginWithPassword(body.email, body.password);
+  async loginPassword(
+    @Body()
+    body: {
+      username?: User['username'];
+      email?: User['email'];
+      phone?: User['phone'];
+      password: string;
+    },
+  ) {
+    const loginKey: string | undefined | null =
+      body.username ?? body.email ?? body.phone;
+
+    if (!loginKey) {
+      throw new Error('请输入用户名、邮箱或手机号');
+    }
+
+    if (!body.password) {
+      throw new Error('请输入密码');
+    }
+
+    return this.authService.loginWithPassword(loginKey, body.password);
   }
 
   @Post('oauth/:provider')
@@ -23,18 +46,28 @@ export class AuthController {
     return this.authService.loginWithOAuth(provider, code);
   }
 
-  @Post('verify')
+  @Post('login/verify')
   async loginVerification(
     @Body()
     body: {
-      provider: VerificationCodeProvider;
-      target: string;
+      email?: User['email'];
+      phone?: User['phone'];
       code: string;
     },
   ) {
+    const loginKey: string | undefined | null = body.email ?? body.phone;
+
+    if (!loginKey) {
+      throw new Error('请输入邮箱或手机号');
+    }
+
+    if (!body.code) {
+      throw new Error('请输入验证码');
+    }
+
     return this.authService.loginWithVerificationCode(
-      body.provider,
-      body.target,
+      VerificationCodeProvider.EMAIL_SMS,
+      loginKey,
       body.code,
     );
   }

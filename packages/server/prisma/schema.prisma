@@ -42,9 +42,11 @@ enum VerificationCodeProvider {
 /// 用户表
 /// -------------------------------
 model User {
-  id        String   @id @default(cuid()) // 主键
-  name      String // 用户昵称
+  id        String   @id @default(cuid()) // 主键，系统分配
+  username  String   @unique // 用户名，登录时使用，必须唯一
+  phone     String?  @unique // 可选，账号注册或 OAuth 提供
   email     String?  @unique // 可选，账号注册或 OAuth 提供
+  name      String? // 用户昵称
   avatarUrl String? // 用户头像
   createdAt DateTime @default(now())
 
@@ -57,15 +59,15 @@ model User {
 /// 登录方式表
 /// -------------------------------
 model Identity {
-  id          String           @id @default(cuid())
-  userId      String
-  user        User             @relation(fields: [userId], references: [id])
-  provider    IdentityProvider // 使用 enum
-  providerUid String
-  credential  String? // 密码 hash 或空
-  createdAt   DateTime         @default(now())
+  id         String           @id @default(cuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id])
+  provider   IdentityProvider // 使用 enum
+  // providerUid String
+  credential String? // 密码 hash 或空
+  createdAt  DateTime         @default(now())
 
-  @@unique([provider, providerUid]) // 保证同一第三方账号只能绑定一次
+  @@unique([userId, provider])
 }
 
 /// -------------------------------
