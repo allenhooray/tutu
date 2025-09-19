@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import axios from 'axios';
 import { Api } from 'api/src/Api';
-import { debounce } from 'lodash';
+import { throttle } from 'lodash';
 
 export default function HomeScreen() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -40,7 +40,7 @@ export default function HomeScreen() {
     }
   };
 
-  const handleBarCodeScanned = debounce(async ({ type, data }: { type: string; data: string }) => {
+  const handleBarCodeScanned = throttle(async ({ type, data }: { type: string; data: string }) => {
     // 防止多次触发扫码处理
     if (isProcessing) return;
 
