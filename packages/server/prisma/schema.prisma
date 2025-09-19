@@ -94,12 +94,12 @@ model OAuthToken {
 /// 验证码表
 /// -------------------------------
 model VerificationCode {
-  id        String           @id @default(cuid())
-  provider  IdentityProvider // phone / email
+  id        String                   @id @default(cuid())
+  provider  VerificationCodeProvider // phone / email
   target    String // 手机号或邮箱
   code      String
   expiresAt DateTime
-  createdAt DateTime         @default(now())
+  createdAt DateTime                 @default(now())
 
   @@unique([provider, target, code], name: "provider_target_code")
 }

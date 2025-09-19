@@ -20,13 +20,12 @@ export class OAuthTokensService {
    * @param data 令牌数据
    * @returns
    */
-  async createToken({
+  createToken({
+    userId,
     provider,
-    code,
   }: {
     userId: string;
     provider: OAuthProvider;
-    code: string;
   }) {
     // TODO: 从 OAuth 提供商获取令牌
     const tokenData: TokenData = {

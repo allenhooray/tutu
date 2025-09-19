@@ -93,7 +93,7 @@ export class AuthService {
   }) {
     const tokenData = await this.oauthTokensService.createToken({
       provider,
-      code,
+      userId: '',
     });
     const oauthUserInfo = await this.oauthService.getOAuthUserInfo(
       provider,
@@ -125,16 +125,13 @@ export class AuthService {
         userId: newUser.id,
       });
       // 保存 OAuth token
-      await this.oauthTokensService.createToken(
-        newUser.id,
-        provider,
-        tokenData,
-      );
+      await this.oauthTokensService.createToken({ provider, userId: '' });
       return this.generateJWT(newUser);
     }
   }
 
   private generateJWT(user: User) {
+    console.log('generateJWT', user);
     // TODO: 签发 JWT
     return { access_token: 'fake-jwt', user };
   }

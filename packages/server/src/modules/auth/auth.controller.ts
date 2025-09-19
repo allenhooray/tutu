@@ -56,10 +56,12 @@ export class AuthController {
       throw new Error('手机号登录暂未开放');
     }
 
-    const target = email;
+    const target = email as string;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const provider = VerificationCodeProvider.EMAIL;
 
     return await this.verificationCodesService.generateCode({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       provider,
       target,
     });
