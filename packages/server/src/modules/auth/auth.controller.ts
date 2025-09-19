@@ -6,12 +6,14 @@ import {
   OAuthProvider,
   User,
 } from 'generated/prisma';
+import { VerificationCodesService } from '../verification-codes/verification-codes.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private oauthService: OAuthService,
+    private verificationCodesService: VerificationCodesService,
   ) {}
 
   @Post('login/password')
@@ -36,6 +38,31 @@ export class AuthController {
     }
 
     return this.authService.loginWithPassword(loginKey, body.password);
+  }
+
+  @Post('login/send-code')
+  async senCode({
+    email,
+    phone,
+  }: {
+    email?: User['email'];
+    phone?: User['phone'];
+  }) {
+    if (!email && !phone) {
+      throw new Error('请输入邮箱或手机号');
+    }
+
+    if (phone) {
+      throw new Error('手机号登录暂未开放');
+    }
+
+    const target = email;
+    const provider = VerificationCodeProvider.EMAIL;
+
+    return await this.verificationCodesService.generateCode({
+      provider,
+      target,
+    });
   }
 
   @Post('login/verify')

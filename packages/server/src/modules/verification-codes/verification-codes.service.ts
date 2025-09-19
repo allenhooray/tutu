@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { addMinutes, isBefore } from 'date-fns';
 import { VerificationCodeProvider } from 'generated/prisma';
+import { MailService } from 'src/common/mail/mail.service';
 
 @Injectable()
 export class VerificationCodesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mailService: MailService,
+  ) {}
 
   // 生成验证码
   async generateCode({
@@ -15,11 +19,18 @@ export class VerificationCodesService {
     provider: VerificationCodeProvider;
     target: string;
   }) {
+    const EXPIRES_IN = 5;
     const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6位随机码
-    const expiresAt = addMinutes(new Date(), 5); // 5分钟有效
+    const expiresAt = addMinutes(new Date(), EXPIRES_IN); // 5分钟有效
 
     await this.prisma.verificationCode.create({
       data: { provider, target, code, expiresAt },
+    });
+
+    await this.mailService.sendVerificationCode({
+      email: target,
+      code,
+      expiresIn: EXPIRES_IN,
     });
 
     return { success: true };
