@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { OAuthProvider } from 'generated/prisma';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @Injectable()
 export class OAuthTokensService {
   constructor(private prisma: PrismaService) {}
 
-  async createToken(userId: string, provider: 'GOOGLE' | 'FEISHU', data: any) {
+  async createToken(userId: string, provider: OAuthProvider, data: any) {
     return this.prisma.oAuthToken.create({
       data: {
         userId,
@@ -18,7 +19,7 @@ export class OAuthTokensService {
     });
   }
 
-  async getToken(userId: string, provider: 'GOOGLE' | 'FEISHU') {
+  async getToken(userId: string, provider: OAuthProvider) {
     return this.prisma.oAuthToken.findFirst({
       where: { userId, provider },
     });

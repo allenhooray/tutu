@@ -32,6 +32,12 @@ enum OAuthProvider {
   FEISHU
 }
 
+/// 枚举：需要验证码的登录渠道
+enum VerificationCodeProvider {
+  PHONE
+  EMAIL
+}
+
 /// -------------------------------
 /// 用户表
 /// -------------------------------

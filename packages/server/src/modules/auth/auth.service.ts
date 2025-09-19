@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { OAuthService } from './oauth.service';
 import { OAuthTokensService } from '../oauth-tokens/oauth-tokens.service';
 import { VerificationCodesService } from '../verification-codes/verification-codes.service';
+import { OAuthProvider, VerificationCodeProvider } from 'generated/prisma';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,11 @@ export class AuthService {
     private verificationCodesService: VerificationCodesService,
   ) {}
 
-  async loginWithOAuth(provider: 'GOOGLE' | 'FEISHU', code: string) {
+  async loginWithPassword(email: string, password: string) {
+    // TODO
+  }
+
+  async loginWithOAuth(provider: OAuthProvider, code: string) {
     const tokenData = await this.oauthService.getToken(provider, code);
     const userInfo = await this.oauthService.getUserInfo(
       provider,
@@ -39,7 +44,7 @@ export class AuthService {
   }
 
   async loginWithVerificationCode(
-    provider: 'PHONE' | 'EMAIL',
+    provider: VerificationCodeProvider,
     target: string,
     code: string,
   ) {

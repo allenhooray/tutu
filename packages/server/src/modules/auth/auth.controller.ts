@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Query } from '@nestjs/common';
+import { Controller, Post, Body, Query, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { OAuthService } from './oauth.service';
+import { VerificationCodeProvider, OAuthProvider } from 'generated/prisma';
 
 @Controller('auth')
 export class AuthController {
@@ -17,14 +18,19 @@ export class AuthController {
   @Post('oauth/:provider')
   async loginOAuth(
     @Query('code') code: string,
-    @Param('provider') provider: 'GOOGLE' | 'FEISHU',
+    @Param('provider') provider: OAuthProvider,
   ) {
     return this.authService.loginWithOAuth(provider, code);
   }
 
   @Post('verify')
   async loginVerification(
-    @Body() body: { provider: 'PHONE' | 'EMAIL'; target: string; code: string },
+    @Body()
+    body: {
+      provider: VerificationCodeProvider;
+      target: string;
+      code: string;
+    },
   ) {
     return this.authService.loginWithVerificationCode(
       body.provider,
