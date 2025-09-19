@@ -14,10 +14,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// -------------------------------
+/// 枚举：登录方式
+/// -------------------------------
+enum IdentityProvider {
+  PASSWORD
+  PHONE
+  EMAIL
+  GOOGLE
+  FEISHU
+}
+
+/// 枚举：OAuth 提供者
+/// 如果你的系统 OAuth 登录只有 Google/飞书，可以复用 IdentityProvider 的 GOOGLE/FEISHU
+enum OAuthProvider {
+  GOOGLE
+  FEISHU
+}
+
+/// -------------------------------
+/// 用户表
+/// -------------------------------
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String?  @default("")
-  role      String   @default("user")
+  id        String   @id @default(cuid()) // 主键
+  name      String // 用户昵称
+  email     String?  @unique // 可选，账号注册或 OAuth 提供
+  avatarUrl String? // 用户头像
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  // 关联关系
+  identities  Identity[] // 用户的登录方式（多对一）
+  oauthTokens OAuthToken[] // 用户的 OAuth 授权记录（多对一）
+}
+
+/// -------------------------------
+/// 登录方式表
+/// -------------------------------
+model Identity {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  provider    IdentityProvider // 使用 enum
+  providerUid String
+  credential  String? // 密码 hash 或空
+  createdAt   DateTime         @default(now())
+
+  @@unique([provider, providerUid]) // 保证同一第三方账号只能绑定一次
+}
+
+/// -------------------------------
+/// OAuth Token 表
+/// -------------------------------
+model OAuthToken {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  provider     OAuthProvider // 使用 enum
+  accessToken  String
+  refreshToken String
+  scope        String? // 授权范围
+  expiresAt    DateTime // access_token 过期时间
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+/// -------------------------------
+/// 验证码表
+/// -------------------------------
+model VerificationCode {
+  id        String           @id @default(cuid())
+  provider  IdentityProvider // phone / email
+  target    String // 手机号或邮箱
+  code      String
+  expiresAt DateTime
+  createdAt DateTime         @default(now())
+
+  @@unique([provider, target, code])
 }
