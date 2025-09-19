@@ -38,14 +38,6 @@ export class AuthController {
     return this.authService.loginWithPassword(loginKey, body.password);
   }
 
-  @Post('oauth/:provider')
-  async loginOAuth(
-    @Query('code') code: string,
-    @Param('provider') provider: OAuthProvider,
-  ) {
-    return this.authService.loginWithOAuth(provider, code);
-  }
-
   @Post('login/verify')
   async loginVerification(
     @Body()
@@ -55,9 +47,9 @@ export class AuthController {
       code: string;
     },
   ) {
-    const loginKey: string | undefined | null = body.email ?? body.phone;
+    const target: string | undefined | null = body.email ?? body.phone;
 
-    if (!loginKey) {
+    if (!target) {
       throw new Error('请输入邮箱或手机号');
     }
 
@@ -65,10 +57,22 @@ export class AuthController {
       throw new Error('请输入验证码');
     }
 
-    return this.authService.loginWithVerificationCode(
-      VerificationCodeProvider.EMAIL_SMS,
-      loginKey,
-      body.code,
-    );
+    const provider = body.email
+      ? VerificationCodeProvider.EMAIL
+      : VerificationCodeProvider.PHONE;
+
+    return this.authService.loginWithVerificationCode({
+      provider,
+      target,
+      code: body.code,
+    });
+  }
+
+  @Post('oauth/:provider')
+  loginOAuth(
+    @Query('code') code: string,
+    @Param('provider') provider: OAuthProvider,
+  ) {
+    return this.authService.loginWithOAuth({ provider, code });
   }
 }
