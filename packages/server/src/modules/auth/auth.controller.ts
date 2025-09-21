@@ -1,11 +1,8 @@
 import { Controller, Post, Body, Query, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { OAuthService } from './oauth.service';
-import {
-  VerificationCodeProvider,
-  OAuthProvider,
-  User,
-} from 'generated/prisma';
+import { User } from '../users/user.entity';
+import { OAuthProvider, VerificationCodeProvider } from '../../common/typeorm/enums';
 import { VerificationCodesService } from '../verification-codes/verification-codes.service';
 
 @Controller('auth')
@@ -20,13 +17,13 @@ export class AuthController {
   async loginPassword(
     @Body()
     body: {
-      username?: User['username'];
-      email?: User['email'];
-      phone?: User['phone'];
+      username?: string;
+      email?: string;
+      phone?: string;
       password: string;
     },
   ) {
-    const loginKey: string | undefined | null =
+    const loginKey: string | undefined | null = 
       body.username ?? body.email ?? body.phone;
 
     if (!loginKey) {
@@ -45,8 +42,8 @@ export class AuthController {
     email,
     phone,
   }: {
-    email?: User['email'];
-    phone?: User['phone'];
+    email?: string;
+    phone?: string;
   }) {
     if (!email && !phone) {
       throw new Error('请输入邮箱或手机号');
@@ -57,11 +54,9 @@ export class AuthController {
     }
 
     const target = email as string;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const provider = VerificationCodeProvider.EMAIL;
 
     return await this.verificationCodesService.generateCode({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       provider,
       target,
     });
@@ -71,8 +66,8 @@ export class AuthController {
   async loginVerification(
     @Body()
     body: {
-      email?: User['email'];
-      phone?: User['phone'];
+      email?: string;
+      phone?: string;
       code: string;
     },
   ) {

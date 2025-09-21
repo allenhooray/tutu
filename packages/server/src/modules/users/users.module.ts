@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { User } from './user.entity';
+import { Identity } from '../auth/identity.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User, Identity])],
   controllers: [UsersController],
-  providers: [UsersService, PrismaService],
+  providers: [UsersService],
   exports: [UsersService], // 提供给 AuthModule 调用
-})
-export class UsersModule {}
+}) export class UsersModule {}

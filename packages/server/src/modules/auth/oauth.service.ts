@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { TokenData } from '../oauth-tokens/oauth-tokens.service';
 
 @Injectable()
 export class OAuthService {

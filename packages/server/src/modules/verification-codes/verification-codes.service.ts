@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { addMinutes, isBefore } from 'date-fns';
-import { VerificationCodeProvider } from 'generated/prisma';
+import { VerificationCodeProvider } from '../../common/typeorm/enums';
 import { MailService } from 'src/common/mail/mail.service';
+import { VerificationCode } from './verification-code.entity';
 
 @Injectable()
 export class VerificationCodesService {
   constructor(
-    private prisma: PrismaService,
+    @InjectRepository(VerificationCode) 
+    private verificationCodeRepository: Repository<VerificationCode>,
     private mailService: MailService,
   ) {}
 
@@ -23,9 +26,13 @@ export class VerificationCodesService {
     const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6位随机码
     const expiresAt = addMinutes(new Date(), EXPIRES_IN); // 5分钟有效
 
-    await this.prisma.verificationCode.create({
-      data: { provider, target, code, expiresAt },
+    const verificationCode = this.verificationCodeRepository.create({
+      provider,
+      target,
+      code,
+      expiresAt,
     });
+    await this.verificationCodeRepository.save(verificationCode);
 
     await this.mailService.sendVerificationCode({
       email: target,
@@ -42,8 +49,10 @@ export class VerificationCodesService {
     target: string,
     code: string,
   ) {
-    const record = await this.prisma.verificationCode.findUnique({
-      where: { provider_target_code: { provider, target, code } },
+    const record = await this.verificationCodeRepository.findOneBy({
+      provider,
+      target,
+      code,
     });
 
     if (!record || isBefore(record.expiresAt, new Date())) {
@@ -51,7 +60,7 @@ export class VerificationCodesService {
     }
 
     // 验证成功后删除或标记已使用
-    await this.prisma.verificationCode.delete({ where: { id: record.id } });
+    await this.verificationCodeRepository.delete({ id: record.id });
 
     return { success: true };
   }

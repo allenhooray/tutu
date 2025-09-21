@@ -1,16 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { IdentityProvider, User } from 'generated/prisma';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './user.entity';
+import { Identity } from '../auth/identity.entity';
+import { IdentityProvider as AuthIdentityProvider } from '../../common/typeorm/enums';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Identity) private identityRepository: Repository<Identity>,
+  ) {}
 
   /**
    * 根据用户 ID 查找用户
    */
-  async findById(id: string) {
-    return this.prisma.user.findUnique({ where: { id } });
+  async findById(id: string): Promise<User | null> {
+    return this.userRepository.findOneBy({ id });
   }
 
   /**
@@ -18,15 +24,13 @@ export class UsersService {
    * @param uniqueKey 用户名、邮箱或手机号
    * @returns
    */
-  async findUserByAnyUniqueKey(uniqueKey: string) {
-    return this.prisma.user.findFirst({
-      where: {
-        OR: [
-          { email: uniqueKey },
-          { phone: uniqueKey },
-          { username: uniqueKey },
-        ],
-      },
+  async findUserByAnyUniqueKey(uniqueKey: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: [
+        { email: uniqueKey },
+        { phone: uniqueKey },
+        { username: uniqueKey },
+      ],
     });
   }
 
@@ -38,40 +42,33 @@ export class UsersService {
     userId,
     providerUid,
   }: {
-    provider: IdentityProvider;
+    provider: AuthIdentityProvider;
     userId?: string;
     providerUid?: string;
-  }) {
+  }): Promise<Identity | null> {
     if (!userId && !providerUid) {
       return null;
     }
     if (userId) {
-      return this.prisma.identity.findUnique({
-        where: {
-          userId_provider: {
-            userId,
-            provider,
-          },
-        },
+      return this.identityRepository.findOneBy({
+        userId,
+        provider,
       });
     }
     if (providerUid) {
-      return this.prisma.identity.findUnique({
-        where: {
-          provider_providerUid: {
-            provider,
-            providerUid,
-          },
-        },
+      return this.identityRepository.findOneBy({
+        provider,
+        providerUid,
       });
     }
+    return null;
   }
 
   /**
    * 根据 [userId, provider] 或 [provider, providerUid] 查找 User
    */
   async findUserByIdentity(props: {
-    provider: IdentityProvider;
+    provider: AuthIdentityProvider;
     userId?: string;
     providerUid?: string;
   }): Promise<User | null> {
@@ -86,18 +83,18 @@ export class UsersService {
     provider,
     userId,
   }: {
-    provider: IdentityProvider;
+    provider: AuthIdentityProvider;
     userId: string;
-  }) {
-    return this.prisma.identity.create({
-      data: {
-        provider,
-        userId,
-      },
+  }): Promise<Identity> {
+    const identity = this.identityRepository.create({
+      provider,
+      userId,
     });
+    return this.identityRepository.save(identity);
   }
 
-  async createUser(userInfo: Omit<User, 'id' | 'createdAt'>) {
-    return this.prisma.user.create({ data: userInfo });
+  async createUser(userInfo: Omit<User, 'id' | 'createdAt'>): Promise<User> {
+    const user = this.userRepository.create(userInfo);
+    return this.userRepository.save(user);
   }
 }
