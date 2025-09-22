@@ -83,7 +83,12 @@ export default function LoginScreen() {
     try {
       setIsLoggingIn(true);
       // 调用API进行验证码登录
-      const response = await api.post('/auth/login/verify', { email, code });
+      const response = await api.auth.loginVerification({
+        body: {
+          email,
+          code
+        }
+      });
       // 登录成功，保存用户信息和令牌
       await login(response.data.user, response.data.token);
     } catch (error) {
