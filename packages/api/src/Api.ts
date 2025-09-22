@@ -209,6 +209,85 @@ export class Api<
       ...params,
     });
 
+  users = {
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetUser
+     * @request GET:/users/{id}
+     */
+    getUser: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/${id}`,
+        method: "GET",
+        ...params,
+      }),
+  };
+  auth = {
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name LoginPassword
+     * @request POST:/auth/login/password
+     */
+    loginPassword: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/auth/login/password`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name SenCode
+     * @request POST:/auth/login/send-code
+     */
+    senCode: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/auth/login/send-code`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name LoginVerification
+     * @request POST:/auth/login/verify
+     */
+    loginVerification: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/auth/login/verify`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name LoginOAuth
+     * @request POST:/auth/oauth/{provider}
+     */
+    loginOAuth: (
+      provider: string,
+      query: {
+        code: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/auth/oauth/${provider}`,
+        method: "POST",
+        query: query,
+        ...params,
+      }),
+  };
   books = {
     /**
      * No description
