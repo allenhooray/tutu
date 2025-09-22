@@ -1,5 +1,5 @@
 {
-  "name": "docs-addon-app",
+  "name": "@tutu/docs-addon-app",
   "version": "0.0.1",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --mode development",
