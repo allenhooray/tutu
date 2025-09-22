@@ -1,9 +1,10 @@
 {
-  "name": "client",
+  "name": "@tutu/client",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "dev": "pnpm start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -11,11 +12,11 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@tutu/api": "workspace:*",
     "@expo/vector-icons": "^15.0.2",
     "@react-navigation/bottom-tabs": "^7.4.7",
     "@react-navigation/elements": "^2.6.4",
     "@react-navigation/native": "^7.1.17",
-    "api": "workspace:*",
     "axios": "^1.12.2",
     "expo": "~54.0.9",
     "expo-barcode-scanner": "^13.0.1",
