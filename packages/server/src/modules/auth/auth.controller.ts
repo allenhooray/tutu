@@ -41,7 +41,9 @@ export class AuthController {
   }
 
   @Post('login/send-code')
-  async senCode({ email, phone }: { email?: string; phone?: string }) {
+  async senCode(@Body() body: { email?: string; phone?: string }) {
+    console.log('senCode', JSON.stringify(body));
+    const { email, phone } = body;
     if (!email && !phone) {
       throw new Error('请输入邮箱或手机号');
     }

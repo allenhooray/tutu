@@ -27,7 +27,7 @@ export class MailService {
       return await this.mailerService.sendMail({
         to: email,
         subject: '您的验证码',
-        template: './verification', // 模板文件路径
+        template: 'verification', // 模板文件路径
         context: {
           code,
           expiresIn,

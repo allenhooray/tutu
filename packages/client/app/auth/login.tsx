@@ -43,7 +43,11 @@ export default function LoginScreen() {
     try {
       setIsSendingCode(true);
       // 调用API发送验证码
-      await api.post('/auth/login/send-code', { email });
+      await api.auth.senCode({
+        body: {
+          email
+        }
+      });
       Alert.alert('提示', '验证码已发送，请查收邮箱');
       // 开始倒计时
       startCountdown();
