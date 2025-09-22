@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, Unique, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  ManyToOne,
+  Unique,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../users/user.entity';
 import { IdentityProvider } from '../../common/typeorm/enums';
 
@@ -12,7 +20,7 @@ export class Identity {
   @Column()
   userId: string;
 
-  @ManyToOne(() => User, user => user.identities)
+  @ManyToOne(() => User, (user) => user.identities)
   @JoinColumn({ name: 'userId' })
   user: User;
 

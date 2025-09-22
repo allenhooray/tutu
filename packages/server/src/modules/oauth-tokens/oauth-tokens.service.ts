@@ -7,7 +7,8 @@ import { OAuthProvider } from '../../common/typeorm/enums';
 @Injectable()
 export class OAuthTokensService {
   constructor(
-    @InjectRepository(OAuthToken) private oauthTokenRepository: Repository<OAuthToken>,
+    @InjectRepository(OAuthToken)
+    private oauthTokenRepository: Repository<OAuthToken>,
   ) {}
 
   async createToken({

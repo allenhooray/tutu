@@ -8,4 +8,5 @@ import { MailModule } from 'src/common/mail/mail.module';
   imports: [TypeOrmModule.forFeature([VerificationCode]), MailModule],
   providers: [VerificationCodesService],
   exports: [VerificationCodesService],
-}) export class VerificationCodesModule {}
+})
+export class VerificationCodesModule {}

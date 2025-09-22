@@ -9,7 +9,8 @@ import { IdentityProvider as AuthIdentityProvider } from '../../common/typeorm/e
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Identity) private identityRepository: Repository<Identity>,
+    @InjectRepository(Identity)
+    private identityRepository: Repository<Identity>,
   ) {}
 
   /**

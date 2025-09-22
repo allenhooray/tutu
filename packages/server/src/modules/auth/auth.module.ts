@@ -17,4 +17,5 @@ import { Identity } from './identity.entity';
   ],
   controllers: [AuthController],
   providers: [AuthService, OAuthService],
-}) export class AuthModule {}
+})
+export class AuthModule {}

@@ -9,7 +9,7 @@ import { VerificationCode } from './verification-code.entity';
 @Injectable()
 export class VerificationCodesService {
   constructor(
-    @InjectRepository(VerificationCode) 
+    @InjectRepository(VerificationCode)
     private verificationCodeRepository: Repository<VerificationCode>,
     private mailService: MailService,
   ) {}

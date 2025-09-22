@@ -2,7 +2,10 @@ import { Controller, Post, Body, Query, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { OAuthService } from './oauth.service';
 import { User } from '../users/user.entity';
-import { OAuthProvider, VerificationCodeProvider } from '../../common/typeorm/enums';
+import {
+  OAuthProvider,
+  VerificationCodeProvider,
+} from '../../common/typeorm/enums';
 import { VerificationCodesService } from '../verification-codes/verification-codes.service';
 
 @Controller('auth')
@@ -23,7 +26,7 @@ export class AuthController {
       password: string;
     },
   ) {
-    const loginKey: string | undefined | null = 
+    const loginKey: string | undefined | null =
       body.username ?? body.email ?? body.phone;
 
     if (!loginKey) {
@@ -38,13 +41,7 @@ export class AuthController {
   }
 
   @Post('login/send-code')
-  async senCode({
-    email,
-    phone,
-  }: {
-    email?: string;
-    phone?: string;
-  }) {
+  async senCode({ email, phone }: { email?: string; phone?: string }) {
     if (!email && !phone) {
       throw new Error('请输入邮箱或手机号');
     }

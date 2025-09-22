@@ -7,4 +7,5 @@ import { OAuthToken } from './oauth-token.entity';
   imports: [TypeOrmModule.forFeature([OAuthToken])],
   providers: [OAuthTokensService],
   exports: [OAuthTokensService],
-}) export class OAuthTokensModule {}
+})
+export class OAuthTokensModule {}

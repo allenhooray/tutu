@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Identity } from '../auth/identity.entity';
 import { OAuthToken } from '../oauth-tokens/oauth-token.entity';
 
@@ -26,9 +32,9 @@ export class User {
   createdAt: Date;
 
   // 关联关系
-  @OneToMany(() => Identity, identity => identity.user)
+  @OneToMany(() => Identity, (identity) => identity.user)
   identities: Identity[];
 
-  @OneToMany(() => OAuthToken, oauthToken => oauthToken.user)
+  @OneToMany(() => OAuthToken, (oauthToken) => oauthToken.user)
   oauthTokens: OAuthToken[];
 }

@@ -10,4 +10,5 @@ import { Identity } from '../auth/identity.entity';
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService], // 提供给 AuthModule 调用
-}) export class UsersModule {}
+})
+export class UsersModule {}

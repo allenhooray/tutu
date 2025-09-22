@@ -4,7 +4,11 @@ import { OAuthService } from './oauth.service';
 import { OAuthTokensService } from '../oauth-tokens/oauth-tokens.service';
 import { VerificationCodesService } from '../verification-codes/verification-codes.service';
 import { User } from '../users/user.entity';
-import { IdentityProvider, OAuthProvider, VerificationCodeProvider } from '../../common/typeorm/enums';
+import {
+  IdentityProvider,
+  OAuthProvider,
+  VerificationCodeProvider,
+} from '../../common/typeorm/enums';
 
 @Injectable()
 export class AuthService {
@@ -63,7 +67,7 @@ export class AuthService {
     const verificationResult = await this.verificationCodesService.verifyCode(
       provider,
       target,
-      code
+      code,
     );
     if (!verificationResult.success) {
       throw new Error(verificationResult.message || '验证码错误或已过期');
@@ -111,7 +115,7 @@ export class AuthService {
     });
     const oauthUserInfo = await this.oauthService.getOAuthUserInfo(
       provider,
-      tokenData.accessToken
+      tokenData.accessToken,
     );
     if (!oauthUserInfo) {
       throw new Error('OAuth 登录失败');
@@ -126,7 +130,9 @@ export class AuthService {
     // 如果用户不存在，则创建新用户
     if (!user) {
       user = await this.usersService.createUser({
-        username: oauthUserInfo.email || `oauth_${provider}_${oauthUserInfo.providerId}`,
+        username:
+          oauthUserInfo.email ||
+          `oauth_${provider}_${oauthUserInfo.providerId}`,
         email: oauthUserInfo.email || undefined,
         phone: oauthUserInfo.phone || undefined,
         name: oauthUserInfo.name || '',

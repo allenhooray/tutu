@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, Unique, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  Unique,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../users/user.entity';
 import { OAuthProvider } from '../../common/typeorm/enums';
 
@@ -11,7 +20,7 @@ export class OAuthToken {
   @Column()
   userId: string;
 
-  @ManyToOne(() => User, user => user.oauthTokens)
+  @ManyToOne(() => User, (user) => user.oauthTokens)
   @JoinColumn({ name: 'userId' })
   user: User;
 
