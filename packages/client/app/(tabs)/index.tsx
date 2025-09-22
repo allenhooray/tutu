@@ -5,21 +5,13 @@ import { CameraView, Camera } from 'expo-camera';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import axios from 'axios';
-import { Api } from 'api/src/Api';
+import { api } from '@/api';
 import { throttle } from 'lodash';
 
 export default function HomeScreen() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanning, setScanning] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-
-  // 创建axios实例
-  const axiosInstance = axios.create({
-    baseURL: 'http://192.168.100.136:3000', // 根据实际后端API地址调整
-    timeout: 1000000,
-  });
-
-  const api = new Api(axiosInstance);
 
   const requestCameraPermission = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
