@@ -4,7 +4,7 @@ export function Toaster({ ...props }: React.ComponentProps<typeof SonnerToaster>
   return (
     <SonnerToaster
       richColors
-      position="top-right"
+      position="top-center"
       className="
         group
         gap-2
@@ -20,7 +20,7 @@ export function Toaster({ ...props }: React.ComponentProps<typeof SonnerToaster>
       "
       toastOptions={{
         classNames: {
-          toast: 
+          toast:
             'group/toast'
             + ' bg-background border border-border text-foreground shadow-sm'
             + ' transition-all data-[swipe=true]:transition-none',

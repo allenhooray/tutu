@@ -4,14 +4,26 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import LarkIcon from "@/views/Login/assets/lark.svg?react"
 import GoogleIcon from "@/views/Login/assets/google.svg?react"
+import { toast } from "sonner"
+import type { FC } from "react"
+
+interface IProps {
+  className?: string
+}
 
 
-export function LoginForm({
+export const LoginForm: FC<IProps> = ({
   className,
-  ...props
-}: React.ComponentProps<"form">) {
+}) => {
+  const handleClickOAuth = () => {
+    toast('更多登录方式实现中', {
+      description: '当前仅支持邮箱登录',
+    })
+  }
+
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Hi 👋</h1>
         <p className="text-muted-foreground text-sm text-balance">
@@ -19,35 +31,39 @@ export function LoginForm({
         </p>
       </div>
       <div className="grid gap-6">
-        <div className="grid gap-3">
-          <Label htmlFor="email">邮箱</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
-        </div>
-        <div className="grid gap-3">
-          <div className="flex items-center">
-            <Label htmlFor="password">密码</Label>
-            <a
-              href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              忘记密码？
-            </a>
+
+        <form >
+          <div className="grid gap-3">
+            <Label htmlFor="email">邮箱</Label>
+            <Input id="email" type="email" placeholder="m@example.com" required />
           </div>
-          <Input id="password" type="password" required />
-        </div>
-        <Button type="submit" className="w-full">
-          登录
-        </Button>
+          <div className="grid gap-3">
+            <div className="flex items-center">
+              <Label htmlFor="password">密码</Label>
+              <a
+                href="#"
+                className="ml-auto text-sm underline-offset-4 hover:underline"
+              >
+                忘记密码？
+              </a>
+            </div>
+            <Input id="password" type="password" required />
+          </div>
+          <Button type="submit" className="w-full">
+            登录
+          </Button>
+
+        </form>
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
             或者使用
           </span>
         </div>
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full" onClick={handleClickOAuth}>
           <LarkIcon />
           使用 飞书 登录
         </Button>
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full" onClick={handleClickOAuth}>
           <GoogleIcon />
           使用 Google 登录
         </Button>
@@ -58,6 +74,6 @@ export function LoginForm({
           注册
         </a>
       </div>
-    </form>
+    </div >
   )
 }
