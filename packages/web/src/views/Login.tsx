@@ -19,13 +19,14 @@ const Login: React.FC = () => {
 
   const { isAuthenticated } = useAuth();
 
-  // 已登录，重定向到指定页面
-  if (isAuthenticated) {
-    return <Navigate to='/' replace />
-  }
-
   // 获取重定向的来源页面，如果没有则默认返回首页
   const from = (location.state as { from: { pathname: string } })?.from?.pathname || '/';
+
+  // 已登录，重定向到指定页面
+  if (isAuthenticated) {
+    return <Navigate to={from} replace />
+  }
+
 
   // 处理登录表单提交
   const handleSubmit = (e: React.FormEvent) => {
