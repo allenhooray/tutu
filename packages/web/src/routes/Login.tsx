@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+
+import { toast } from 'sonner';
+import { Eye, EyeOff, Lock, MailIcon } from 'lucide-react';
+import NavigationMenu from '../components/NavigationMenu';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,11 +24,10 @@ const Login: React.FC = () => {
   // 处理登录表单提交
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     // 简单的表单验证
     if (!email || !password) {
-      setError('请填写所有必填字段');
+      toast.error('请填写所有必填字段');
       return;
     }
 
@@ -41,116 +48,92 @@ const Login: React.FC = () => {
         // 登录成功后重定向到来源页面
         navigate(from, { replace: true });
       } catch (_) {
-        setError('登录失败，请检查您的邮箱和密码');
+        toast.error('登录失败，请检查您的邮箱和密码');
       }
     }, 500);
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>用户登录</h2>
-        {error && <div style={styles.error}>{error}</div>}
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="email">邮箱</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="请输入邮箱"
-              style={styles.input}
-              required
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="password">密码</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="请输入密码"
-              style={styles.input}
-              required
-            />
-          </div>
-          <button type="submit" style={styles.button}>登录</button>
-        </form>
-        <div style={styles.footer}>
-          <p>没有账号？请联系管理员</p>
-          {/* 实际项目中这里可以链接到注册页面 */}
-        </div>
-      </div>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <NavigationMenu />
+      <main className="flex-1 container px-4 py-8 md:px-6 flex items-center justify-center">
+        <Card className="w-full max-w-md space-y-4 border-2 border-border/20">
+          <CardHeader className="text-center space-y-1 pb-2">
+            <CardTitle className="text-2xl font-bold">欢迎回来</CardTitle>
+            <CardDescription>
+              登录您的账号以继续使用 Tutu Web
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-2">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">
+                  邮箱
+                </Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <MailIcon className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="请输入您的邮箱"
+                    className="pl-10 h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium">
+                  密码
+                </Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Lock className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="请输入您的密码"
+                    className="pl-10 pr-10 h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </button>
+                </div>
+              </div>
+              <Button type="submit" className="w-full h-10 gap-2">
+                登录
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="justify-center text-center text-xs text-muted-foreground space-y-2 pt-0">
+            <p>
+              继续即表示您同意我们的{' '}
+              <a href="#" className="text-primary hover:underline">
+                服务条款
+              </a>{' '}
+              和{' '}
+              <a href="#" className="text-primary hover:underline">
+                隐私政策
+              </a>
+            </p>
+          </CardFooter>
+        </Card>
+      </main>
     </div>
   );
-};
-
-// 简单的样式定义
-const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-    padding: '2rem',
-    backgroundColor: '#f5f5f5',
-  },
-  card: {
-    width: '100%',
-    maxWidth: '400px',
-    padding: '2rem',
-    backgroundColor: 'white',
-    borderRadius: '8px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-  },
-  title: {
-    marginBottom: '1.5rem',
-    textAlign: 'center' as const,
-    color: '#333',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-  },
-  formGroup: {
-    marginBottom: '1rem',
-  },
-  label: {
-    display: 'block',
-    marginBottom: '0.5rem',
-    fontWeight: 'bold' as const,
-    color: '#555',
-  },
-  input: {
-    width: '100%',
-    padding: '0.75rem',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '1rem',
-  },
-  button: {
-    padding: '0.75rem',
-    backgroundColor: '#4a6cf7',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    fontWeight: 'bold' as const,
-    cursor: 'pointer',
-    marginTop: '1rem',
-  },
-  error: {
-    color: 'red',
-    marginBottom: '1rem',
-    textAlign: 'center' as const,
-  },
-  footer: {
-    marginTop: '1.5rem',
-    textAlign: 'center' as const,
-    color: '#777',
-  },
 };
 
 export default Login;
