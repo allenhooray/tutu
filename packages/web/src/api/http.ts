@@ -1,6 +1,5 @@
 
 import axios from 'axios'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // 创建axios实例
 export const http = axios.create({
@@ -14,18 +13,7 @@ export const http = axios.create({
 // 请求拦截器，自动添加认证令牌
 http.interceptors.request.use(
   async (config) => {
-    try {
-      const token = await AsyncStorage.getItem('authToken')
-      if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`
-      }
-    } catch (error) {
-      console.error('Failed to get auth token:', error)
-    }
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
+    return config;
   }
 )
 
@@ -37,14 +25,7 @@ http.interceptors.response.use(
   async (error) => {
     // 处理401未授权错误，自动跳转到登录页面
     if (error.response?.status === 401) {
-      try {
-        await AsyncStorage.removeItem('authToken')
-        await AsyncStorage.removeItem('user')
-        // 这里可以使用导航跳转，但需要注意循环依赖问题
-        // 可以在实际应用中使用事件总线或其他方式处理
-      } catch (e) {
-        console.error('Failed to clear auth data:', e)
-      }
+      // TODO
     }
     return Promise.reject(error)
   }
