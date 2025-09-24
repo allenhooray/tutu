@@ -7,6 +7,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './common/typeorm/typeorm.module';
 import { UsersModule } from './modules/users/users.module';
 import { VerificationCodesModule } from './modules/verification-codes/verification-codes.module';
+import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -21,6 +24,18 @@ import { VerificationCodesModule } from './modules/verification-codes/verificati
     BooksModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    // 全局注册统一响应拦截器
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+    // 全局注册异常过滤器
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}

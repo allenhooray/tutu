@@ -30,6 +30,11 @@ export interface LoginCodeSendCodeDto {
   phone?: string;
 }
 
+export interface LoginCodeSendCodeResponseDto {
+  /** 验证码 */
+  code: string;
+}
+
 export interface LoginCodeVerifyDto {
   /** 邮箱 */
   email?: string;
@@ -280,11 +285,12 @@ export class Api<
      * @request POST:/auth/login/send-code
      */
     senCode: (data: LoginCodeSendCodeDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<LoginCodeSendCodeResponseDto, void>({
         path: `/auth/login/send-code`,
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -319,11 +325,10 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<User, any>({
+      this.request<void, any>({
         path: `/auth/oauth/${provider}`,
         method: "POST",
         query: query,
-        format: "json",
         ...params,
       }),
   };

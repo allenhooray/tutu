@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Query, Param } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { OAuthService } from './oauth.service';
 import { User } from '../users/user.entity';
@@ -10,9 +10,11 @@ import {
 import { VerificationCodesService } from '../verification-codes/verification-codes.service';
 import {
   LoginCodeSendCodeDto,
+  LoginCodeSendCodeResponseDto,
   LoginCodeVerifyDto,
   LoginPasswordDto,
 } from './auth.dto';
+import { ApiResponse } from 'src/common/decorators/api-response';
 
 @Controller('auth')
 export class AuthController {
@@ -42,6 +44,7 @@ export class AuthController {
   }
 
   @Post('login/send-code')
+  @ApiResponse(LoginCodeSendCodeResponseDto)
   async senCode(@Body() body: LoginCodeSendCodeDto) {
     console.log('senCode', JSON.stringify(body));
     const { email, phone } = body;
@@ -90,7 +93,6 @@ export class AuthController {
 
   @Post('oauth/:provider')
   @ApiOperation({ summary: 'OAuth登录' })
-  @ApiResponse({ status: 200, description: '成功', type: User })
   loginOAuth(
     @Query('code') code: string,
     @Param('provider') provider: OAuthProvider,

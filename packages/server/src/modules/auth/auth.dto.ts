@@ -44,3 +44,8 @@ export class LoginOAuthDto {
   @ApiProperty({ description: 'OAuth授权码' })
   code: string;
 }
+
+export class LoginCodeSendCodeResponseDto {
+  @ApiProperty({ description: '验证码' })
+  code: string;
+}
