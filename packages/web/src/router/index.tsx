@@ -3,7 +3,7 @@ import Home from '@/views/Home';
 import About from '@/views/About';
 import Login from '@/views/Login';
 import NotFound from '@/views/NotFound';
-import { PrivateRoute } from './PrivateRoute';
+import { PrivateRoute } from './auth/PrivateRoute';
 import { FullLayout } from './layouts/FullLayout';
 import { TopNavigationLayout } from './layouts/TopNavigationLayout';
 
