@@ -4,12 +4,12 @@ import About from '@/views/About';
 import Login from '@/views/Login';
 import NotFound from '@/views/NotFound';
 import { PrivateRoute } from './PrivateRoute';
-import { PublicRoute } from './PublicRoute';
+import { FullLayout } from './layouts/FullLayout';
 
 const router = createBrowserRouter([
-  // 公共路由
+  // 全屏
   {
-    element: <PublicRoute />,
+    element: <FullLayout />,
     children: [
       {
         path: '/login',

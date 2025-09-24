@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
@@ -16,6 +16,13 @@ const Login: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { isAuthenticated } = useAuth();
+
+  // 已登录，重定向到指定页面
+  if (isAuthenticated) {
+    return <Navigate to='/' replace />
+  }
 
   // 获取重定向的来源页面，如果没有则默认返回首页
   const from = (location.state as { from: { pathname: string } })?.from?.pathname || '/';
@@ -46,7 +53,8 @@ const Login: React.FC = () => {
 
         // 登录成功后重定向到来源页面
         navigate(from, { replace: true });
-      } catch (_) {
+      } catch (error) {
+        console.error('登录失败:', error);
         toast.error('登录失败，请检查您的邮箱和密码');
       }
     }, 500);
