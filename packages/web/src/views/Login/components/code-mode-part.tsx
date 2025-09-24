@@ -78,12 +78,12 @@ export const CodeFormPart: FC = () => {
       </div>
       <div className="grid gap-3">
         <div className="flex items-center">
-          <Label htmlFor="password">
+          <Label htmlFor="code">
             验证码
           </Label>
         </div>
         <div className="flex items-center gap-3">
-          <Input id="password" type="password" required value={code} onChange={(e) => setCode(e.target.value)} />
+          <Input id="code" type="text" required value={code} onChange={(e) => setCode(e.target.value)} />
           <Button disabled={sendCodeBtnDisabled} onClick={handleGetCode}>
             {countdown > 0 ? `获取验证码(${countdown}s)` : '获取验证码'}
           </Button>
