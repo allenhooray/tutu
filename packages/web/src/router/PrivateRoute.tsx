@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from './useAuth';
+import { useAuth } from '@/context';
 
 // 受保护路由组件接口
 interface PrivateRouteProps {

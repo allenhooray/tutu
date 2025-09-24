@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import type { AuthContextType } from '@/context';
-import { AuthContext } from '@/context';
+import type { AuthContextType } from './type';
+import { AuthContext } from './context';
 
 /**
  * 自定义钩子，方便使用认证上下文

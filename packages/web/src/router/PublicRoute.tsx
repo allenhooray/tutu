@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from './useAuth';
+import { useAuth } from '@/context';
 
 /**
  * 公共路由组件
