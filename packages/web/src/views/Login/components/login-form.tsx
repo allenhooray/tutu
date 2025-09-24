@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import GoogleIcon from "@/views/Login/assets/google.svg?react"
+
 
 export function LoginForm({
   className,
@@ -48,6 +50,10 @@ export function LoginForm({
             />
           </svg>
           使用 GitHub 登录
+        </Button>
+        <Button variant="outline" className="w-full">
+          <GoogleIcon />
+          使用 Google 登录
         </Button>
       </div>
       <div className="text-center text-sm">
