@@ -7,6 +7,11 @@ import {
   VerificationCodeProvider,
 } from '../../common/typeorm/enums';
 import { VerificationCodesService } from '../verification-codes/verification-codes.service';
+import {
+  LoginCodeSendCodeDto,
+  LoginCodeVerifyDto,
+  LoginPasswordDto,
+} from './auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,12 +24,7 @@ export class AuthController {
   @Post('login/password')
   async loginPassword(
     @Body()
-    body: {
-      username?: string;
-      email?: string;
-      phone?: string;
-      password: string;
-    },
+    body: LoginPasswordDto,
   ) {
     const loginKey: string | undefined | null =
       body.username ?? body.email ?? body.phone;
@@ -41,7 +41,7 @@ export class AuthController {
   }
 
   @Post('login/send-code')
-  async senCode(@Body() body: { email?: string; phone?: string }) {
+  async senCode(@Body() body: LoginCodeSendCodeDto) {
     console.log('senCode', JSON.stringify(body));
     const { email, phone } = body;
     if (!email && !phone) {
@@ -64,11 +64,7 @@ export class AuthController {
   @Post('login/verify')
   async loginVerification(
     @Body()
-    body: {
-      email?: string;
-      phone?: string;
-      code: string;
-    },
+    body: LoginCodeVerifyDto,
   ) {
     const target: string | undefined | null = body.email ?? body.phone;
 
