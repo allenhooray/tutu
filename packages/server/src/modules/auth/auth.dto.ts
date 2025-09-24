@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { OAuthProvider } from '../../common/typeorm/enums';
 
 export class LoginPasswordDto {
   @ApiPropertyOptional({ description: '用户名、邮箱或手机号' })
@@ -30,5 +31,16 @@ export class LoginCodeVerifyDto {
   phone?: string;
 
   @ApiProperty({ description: '验证码' })
+  code: string;
+}
+
+/**
+ * OAuth登录参数
+ */
+export class LoginOAuthDto {
+  @ApiProperty({ description: 'OAuth提供商' })
+  provider: OAuthProvider;
+
+  @ApiProperty({ description: 'OAuth授权码' })
   code: string;
 }
