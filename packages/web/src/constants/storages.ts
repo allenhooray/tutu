@@ -1,3 +1,4 @@
 export const LOCAL_STORAGE_KEYS = {
   JWT: 'TUTU_AUTHORIZATION',
+  USER: 'TUTU_USER',
 }

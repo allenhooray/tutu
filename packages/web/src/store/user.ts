@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE_KEYS } from '@/constants/storages';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -49,7 +50,7 @@ export const useUserStore = create<UserState>()(
       }
     }),
     {
-      name: 'tutu-user-storage', // 本地存储的键名
+      name: LOCAL_STORAGE_KEYS.USER, // 本地存储的键名
       
       // 自定义持久化行为
       partialize: (state) => ({
