@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 
 import { LoginForm } from "./components/login-form"
 import { useCheckLogin } from "./hooks/useCheckLogin"
+import ImgBg from "./assets/bg.png"
 
 export default function LoginPage() {
   const location = useLocation();
@@ -20,7 +21,8 @@ export default function LoginPage() {
             <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
               <GalleryVerticalEnd className="size-4" />
             </div>
-            Acme Inc.
+            <span className="font-bold">图图</span>
+            <span className="font-thin">数字化管理纸质图书</span>
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -31,7 +33,7 @@ export default function LoginPage() {
       </div>
       <div className="bg-muted relative hidden lg:block">
         <img
-          src="/placeholder.svg"
+          src={ImgBg}
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
