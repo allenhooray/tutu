@@ -7,6 +7,7 @@ import { OAuthTokensModule } from '../oauth-tokens/oauth-tokens.module';
 import { VerificationCodesModule } from '../verification-codes/verification-codes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Identity } from './identity.entity';
+import { JwtAuthModule } from '../../common/auth/jwt.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { Identity } from './identity.entity';
     UsersModule, // 操作 User/Identity
     OAuthTokensModule, // 保存/查询 OAuth token
     VerificationCodesModule, // 验证码登录
+    JwtAuthModule, // JWT认证模块
   ],
   controllers: [AuthController],
   providers: [AuthService, OAuthService],

@@ -15,6 +15,9 @@ import {
   LoginPasswordDto,
 } from './auth.dto';
 import { ApiResponse } from 'src/common/decorators/api-response';
+import type { Response } from 'express';
+import { Res } from '@nestjs/common';
+import { HEADERS } from 'src/constants/headers';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +31,7 @@ export class AuthController {
   async loginPassword(
     @Body()
     body: LoginPasswordDto,
+    @Res() res: Response,
   ) {
     const loginKey: string | undefined | null =
       body.username ?? body.email ?? body.phone;
@@ -40,7 +44,16 @@ export class AuthController {
       throw new Error('请输入密码');
     }
 
-    return this.authService.loginWithPassword(loginKey, body.password);
+    const result = await this.authService.loginWithPassword(
+      loginKey,
+      body.password,
+    );
+    // 在响应头中添加JWT
+    res.header('Access-Control-Expose-Headers', HEADERS.AUTHORIZATION);
+    res.header(HEADERS.AUTHORIZATION, `Bearer ${result.token}`);
+    res.json({
+      user: result.user,
+    });
   }
 
   @Post('login/send-code')
@@ -69,6 +82,7 @@ export class AuthController {
   async loginVerification(
     @Body()
     body: LoginCodeVerifyDto,
+    @Res() res: Response,
   ) {
     const target: string | undefined | null = body.email ?? body.phone;
 
@@ -84,19 +98,32 @@ export class AuthController {
       ? VerificationCodeProvider.EMAIL
       : VerificationCodeProvider.PHONE;
 
-    return this.authService.loginWithVerificationCode({
+    const result = await this.authService.loginWithVerificationCode({
       provider,
       target,
       code: body.code,
+    });
+    // 在响应头中添加JWT
+    res.header('Access-Control-Expose-Headers', HEADERS.AUTHORIZATION);
+    res.header(HEADERS.AUTHORIZATION, `Bearer ${result.token}`);
+    res.json({
+      user: result.user,
     });
   }
 
   @Post('oauth/:provider')
   @ApiOperation({ summary: 'OAuth登录' })
-  loginOAuth(
+  async loginOAuth(
     @Query('code') code: string,
     @Param('provider') provider: OAuthProvider,
+    @Res() res: Response,
   ) {
-    return this.authService.loginWithOAuth({ provider, code });
+    const result = await this.authService.loginWithOAuth({ provider, code });
+    // 在响应头中添加JWT
+    res.header('Access-Control-Expose-Headers', HEADERS.AUTHORIZATION);
+    res.header(HEADERS.AUTHORIZATION, `Bearer ${result.token}`);
+    res.json({
+      user: result.user,
+    });
   }
 }

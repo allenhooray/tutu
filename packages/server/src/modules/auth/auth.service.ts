@@ -9,6 +9,7 @@ import {
   OAuthProvider,
   VerificationCodeProvider,
 } from '../../common/typeorm/enums';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     private oauthService: OAuthService,
     private oauthTokensService: OAuthTokensService,
     private verificationCodesService: VerificationCodesService,
+    private jwtService: JwtService,
   ) {}
 
   /**
@@ -167,8 +169,11 @@ export class AuthService {
    * @returns
    */
   private async generateJWT(userId: string): Promise<string> {
-    // 实际实现中，应该使用 JWT 库生成 Token
-    // 这里只是返回一个模拟的 Token
-    return `mock-jwt-token-${userId}`;
+    // 使用 JWT 服务生成 Token
+    const payload = {
+      sub: userId,
+      iat: Math.floor(Date.now() / 1000),
+    };
+    return this.jwtService.sign(payload);
   }
 }

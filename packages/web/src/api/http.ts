@@ -17,7 +17,7 @@ http.interceptors.request.use(
   async (config) => {
     const token = localStorage.getItem(LOCAL_STORAGE_KEYS.JWT);
     if (token) {
-      config.headers.Authorization = token;
+      config.headers[HEADERS.AUTHORIZATION] = token;
     }
     return config;
   }
