@@ -1,9 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Home from './Home';
-import About from './About';
-import Login from './Login';
-import NotFound from './NotFound';
-import { PrivateRoute, PublicRoute } from '../auth/PrivateRoute';
+import Home from '@/views/Home';
+import About from '@/views/About';
+import Login from '@/views/Login';
+import NotFound from '@/views/NotFound';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
 
 const router = createBrowserRouter([
   // 公共路由
