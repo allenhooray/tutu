@@ -10,6 +10,35 @@
  * ---------------------------------------------------------------
  */
 
+export type User = object;
+
+export interface LoginPasswordDto {
+  /** 用户名、邮箱或手机号 */
+  username?: string;
+  /** 邮箱 */
+  email?: string;
+  /** 手机号 */
+  phone?: string;
+  /** 密码 */
+  password: string;
+}
+
+export interface LoginCodeSendCodeDto {
+  /** 邮箱 */
+  email?: string;
+  /** 手机号 */
+  phone?: string;
+}
+
+export interface LoginCodeVerifyDto {
+  /** 邮箱 */
+  email?: string;
+  /** 手机号 */
+  phone?: string;
+  /** 验证码 */
+  code: string;
+}
+
 import type {
   AxiosInstance,
   AxiosRequestConfig,
@@ -215,12 +244,14 @@ export class Api<
      *
      * @tags Users
      * @name GetUser
+     * @summary 根据ID获取用户信息
      * @request GET:/users/{id}
      */
     getUser: (id: string, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<User, any>({
         path: `/users/${id}`,
         method: "GET",
+        format: "json",
         ...params,
       }),
   };
@@ -232,10 +263,12 @@ export class Api<
      * @name LoginPassword
      * @request POST:/auth/login/password
      */
-    loginPassword: (params: RequestParams = {}) =>
+    loginPassword: (data: LoginPasswordDto, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/auth/login/password`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -246,10 +279,12 @@ export class Api<
      * @name SenCode
      * @request POST:/auth/login/send-code
      */
-    senCode: (params: RequestParams = {}) =>
+    senCode: (data: LoginCodeSendCodeDto, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/auth/login/send-code`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -260,10 +295,12 @@ export class Api<
      * @name LoginVerification
      * @request POST:/auth/login/verify
      */
-    loginVerification: (params: RequestParams = {}) =>
+    loginVerification: (data: LoginCodeVerifyDto, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/auth/login/verify`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -272,6 +309,7 @@ export class Api<
      *
      * @tags Auth
      * @name LoginOAuth
+     * @summary OAuth登录
      * @request POST:/auth/oauth/{provider}
      */
     loginOAuth: (
@@ -281,10 +319,11 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
+      this.request<User, any>({
         path: `/auth/oauth/${provider}`,
         method: "POST",
         query: query,
+        format: "json",
         ...params,
       }),
   };
