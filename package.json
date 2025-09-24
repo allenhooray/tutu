@@ -6,6 +6,8 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "dev:web": "pnpm --filter '@tutu/server' --filter '@tutu/web' dev",
+    "dev:client": "pnpm --filter '@tutu/server' --filter '@tutu/client' dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
