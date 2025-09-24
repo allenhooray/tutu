@@ -1,9 +1,6 @@
-import React, { createContext, useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
-import type { User, AuthContextType } from './auth-types';
-
-// 创建认证上下文
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { type ReactNode, useState, useEffect } from "react";
+import type { User } from "./type";
+import { AuthContext } from "./context";
 
 // 认证提供者组件
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
