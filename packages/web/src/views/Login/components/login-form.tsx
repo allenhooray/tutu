@@ -2,7 +2,9 @@ import { cn } from "@/lib/utils"
 import { useState, type FC } from "react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { OAuthPart } from "./oauth-part"
-import { FormPart } from "./form-part"
+import { FooterPart } from "./footer-part"
+import { PasswordFormPart } from "./password-part"
+import { CodeFormPart } from "./code-mode-part"
 
 interface IProps {
   className?: string
@@ -29,20 +31,10 @@ export const LoginForm: FC<IProps> = ({
 
       <div className="grid gap-6">
         <div className="grid gap-3">
-          <FormPart mode={tab} />
-          <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-            <span className="bg-background text-muted-foreground relative z-10 px-2">
-              或者使用
-            </span>
-          </div>
+          {tab === 'password' ? <PasswordFormPart /> : <CodeFormPart />}
           <OAuthPart />
         </div>
-        <div className="text-center text-sm">
-          还没有账号？{" "}
-          <a href="#" className="underline underline-offset-4">
-            注册
-          </a>
-        </div>
+        <FooterPart mode={tab} />
       </div >
     </div>
   )

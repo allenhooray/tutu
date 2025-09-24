@@ -13,6 +13,11 @@ export const OAuthPart: FC = () => {
 
   return (
     <>
+      <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+        <span className="bg-background text-muted-foreground relative z-10 px-2">
+          或者
+        </span>
+      </div>
       <Button variant="outline" className="w-full" onClick={handleClickOAuth}>
         <LarkIcon />
         使用 飞书 登录
