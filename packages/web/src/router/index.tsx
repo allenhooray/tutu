@@ -5,6 +5,7 @@ import Login from '@/views/Login';
 import NotFound from '@/views/NotFound';
 import { PrivateRoute } from './PrivateRoute';
 import { FullLayout } from './layouts/FullLayout';
+import { TopNavigationLayout } from './layouts/TopNavigationLayout';
 
 const router = createBrowserRouter([
   // 全屏
@@ -15,26 +16,31 @@ const router = createBrowserRouter([
         path: '/login',
         element: <Login />,
       },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
     ],
   },
-  // 受保护的路由
+  // 带有导航栏的布局
   {
-    element: <PrivateRoute />,
+    element: <TopNavigationLayout />,
     children: [
+      // 受保护的路由
       {
-        path: '/',
-        element: <Home />,
-      },
-      {
-        path: '/about',
-        element: <About />,
-      },
-    ],
-  },
-  // 404 路由
-  {
-    path: '*',
-    element: <NotFound />,
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: '/',
+            element: <Home />,
+          },
+          {
+            path: '/about',
+            element: <About />,
+          },
+        ],
+      }
+    ]
   },
 ]);
 

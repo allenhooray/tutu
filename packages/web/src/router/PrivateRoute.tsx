@@ -26,7 +26,7 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
   // 注意：当前User接口中没有role字段，需要根据实际情况添加
   if (allowedRoles) {
     // 无权限，重定向到无权限页面（这里简化处理，直接返回首页）
-    return <Navigate to="/" replace />
+    return <Navigate to="/login" replace />
   }
 
   // 已登录且有权限，渲染子路由

@@ -1,12 +1,12 @@
-import type { FC, PropsWithChildren } from "react"
+import { Outlet } from 'react-router-dom';
 import NavigationMenu from "./components/NavigationMenu"
 
-export const TopNavigationLayout: FC<PropsWithChildren> = ({ children }) => {
+export const TopNavigationLayout = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <NavigationMenu />
       <main>
-        {children}
+        <Outlet />
       </main>
     </div>
   )
