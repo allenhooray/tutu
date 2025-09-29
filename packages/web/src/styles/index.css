@@ -1,10 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import "./fonts.css";
+
+@import "./global.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
+  --font-kai: 'Ma Shan Zheng', cursive;
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
@@ -114,6 +119,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

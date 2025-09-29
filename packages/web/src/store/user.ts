@@ -52,13 +52,18 @@ export const useUserStore = create<UserState>()(
       },
 
       fetchUser: async () => {
-        const resp = await api.users.getCurrentUser();
-        if (resp.data) {
-          set({
-            user: resp.data,
-            isAuthenticated: true
-          });
-        }   
+        try {
+          const resp = await api.users.getCurrentUser();
+          // 检查resp.data是否包含User接口所需的字段
+          if (resp.data && 'id' in resp.data && 'name' in resp.data && 'email' in resp.data) {
+            set({
+              user: resp.data as User,
+              isAuthenticated: true
+            });
+          }
+        } catch (error) {
+          console.error('Failed to fetch user:', error);
+        }
       }
     }),
     {
