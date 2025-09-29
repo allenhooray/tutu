@@ -1,28 +1,39 @@
-import { useForm } from 'react-hook-form';
-import { Form } from '@/components/ui/form';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 
-// 定义表单数据类型
-interface BookQueryFormData {
-  isbn: string;
-}
-
 export const BookQueryView = () => {
-  // 使用 React Hook Form 创建表单
-  const form = useForm<BookQueryFormData>({
-    defaultValues: {
-      isbn: '',
-    },
-  });
+  const [isbn, setIsbn] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  // 处理表单提交
-  const handleSubmit = (data: BookQueryFormData) => {
-    // 这里可以添加 ISBN 查询的逻辑
-    console.log('Searching for ISBN:', data.isbn);
-    // 实际应用中，这里会调用 API 进行 ISBN 查询
+  // 处理ISBN输入变化
+  const handleIsbnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsbn(e.target.value);
+    setError('');
+  };
+
+  // 处理查询按钮点击
+  const handleSearch = () => {
+    // ISBN验证
+    if (!isbn) {
+      setError('请输入 ISBN 码');
+      return;
+    }
+
+    if (!/^\d{10,13}$/.test(isbn)) {
+      setError('ISBN 码应为 10-13 位数字');
+      return;
+    }
+
+    // 清除错误信息
+    setError('');
+
+    // 假设ISBN就是图书ID
+    navigate(`/book/${isbn}`);
   };
 
   return (
@@ -33,37 +44,30 @@ export const BookQueryView = () => {
         </h1>
 
         <Card className="p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="isbn">
-                  ISBN 码
-                </Label>
-                <Input
-                  id="isbn"
-                  type="text"
-                  placeholder="请输入 ISBN 码"
-                  className="w-full"
-                  {...form.register('isbn', {
-                    required: '请输入 ISBN 码',
-                    pattern: {
-                      value: /^\d{10,13}$/,
-                      message: 'ISBN 码应为 10-13 位数字',
-                    },
-                  })}
-                />
-                {form.formState.errors.isbn && (
-                  <p className="text-sm text-destructive">
-                    {form.formState.errors.isbn.message}
-                  </p>
-                )}
-              </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="isbn">
+                ISBN 码
+              </Label>
+              <Input
+                id="isbn"
+                type="text"
+                placeholder="请输入 ISBN 码"
+                className="w-full"
+                value={isbn}
+                onChange={handleIsbnChange}
+              />
+              {error && (
+                <p className="text-sm text-destructive">
+                  {error}
+                </p>
+              )}
+            </div>
 
-              <Button type="submit" className="w-full">
-                查询
-              </Button>
-            </form>
-          </Form>
+            <Button onClick={handleSearch} className="w-full">
+              查询
+            </Button>
+          </div>
         </Card>
       </div>
     </div>
