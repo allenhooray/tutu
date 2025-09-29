@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '@/context';
+import { useUserStore } from '@/store';
 
 // 受保护路由组件接口
 interface PrivateRouteProps {
@@ -14,13 +14,13 @@ interface PrivateRouteProps {
  * 当用户已登录时，渲染子路由
  */
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useUserStore();
   const location = useLocation();
 
   // 未登录，重定向到登录页面，并记录当前位置以便登录后返回
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />
-  }
+  // if (!isAuthenticated) {
+  //   return <Navigate to="/login" state={{ from: location }} replace />
+  // }
 
   // 已登录，检查角色权限（如果有指定）
   // 注意：当前User接口中没有role字段，需要根据实际情况添加

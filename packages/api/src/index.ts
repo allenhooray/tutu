@@ -253,9 +253,27 @@ export class Api<
      * @request GET:/users/{id}
      */
     getUser: (id: string, params: RequestParams = {}) =>
-      this.request<User, any>({
+      this.request<User, void>({
         path: `/users/${id}`,
         method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetCurrentUser
+     * @summary 获取当前用户信息
+     * @request GET:/users/me
+     * @secure
+     */
+    getCurrentUser: (params: RequestParams = {}) =>
+      this.request<User, void>({
+        path: `/users/me`,
+        method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),

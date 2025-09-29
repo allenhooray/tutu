@@ -6,6 +6,7 @@ import NotFound from '@/views/NotFound';
 import { PrivateRoute } from './auth/PrivateRoute';
 import { FullLayout } from './layouts/FullLayout';
 import { TopNavigationLayout } from './layouts/TopNavigationLayout';
+import { User } from '@/views/User';
 
 const router = createBrowserRouter([
   // 全屏
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
           {
             path: '/about',
             element: <About />,
+          },
+          {
+            path: '/user',
+            element: <User />,
           },
         ],
       }

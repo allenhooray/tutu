@@ -74,7 +74,7 @@ export const CodeFormPart: FC = () => {
     <>
       <div className="grid gap-3">
         <Label htmlFor="emailOrEmail">邮箱或手机号</Label>
-        <Input id="emailOrEmail" placeholder="m@example.com" type="email" required value={loginKey} onChange={(e) => setLoginkey(e.target.value)} />
+        <Input name="emailOrEmail" id="emailOrEmail" placeholder="m@example.com" type="email" required value={loginKey} onChange={(e) => setLoginkey(e.target.value)} />
       </div>
       <div className="grid gap-3">
         <div className="flex items-center">

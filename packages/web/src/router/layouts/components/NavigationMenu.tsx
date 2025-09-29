@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { User, Home as HomeIcon, Info, LogOut } from 'lucide-react';
+import { useUserStore } from '@/store';
 
 interface NavigationMenuProps {
   className?: string;
 }
 
 const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useUserStore();
   const navigate = useNavigate();
 
   const handleLogout = () => {

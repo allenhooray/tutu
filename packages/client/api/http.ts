@@ -17,7 +17,7 @@ http.interceptors.request.use(
     try {
       const token = await AsyncStorage.getItem('authToken')
       if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`
+        config.headers.Authorization = token
       }
     } catch (error) {
       console.error('Failed to get auth token:', error)

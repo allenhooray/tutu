@@ -5,13 +5,10 @@ import { RouterProvider } from 'react-router-dom'
 import '@/styles/index.css'
 import router from '@/router'
 import { Toaster } from '@/components/ui/sonner'
-import { AuthProvider } from '@/context'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-      <Toaster />
-    </AuthProvider>
+    <RouterProvider router={router} />
+    <Toaster />
   </StrictMode>,
 )

@@ -36,8 +36,11 @@ http.interceptors.response.use(
     // 处理401未授权错误，自动跳转到登录页面
     if (error.response?.status === 401) {
       localStorage.removeItem(LOCAL_STORAGE_KEYS.JWT);
-      const redirectUrl = window.location.href;
-      window.location.href = '/login?redirect=' + encodeURIComponent(redirectUrl);
+
+      const currentUrl = window.location.href;
+      if (currentUrl.indexOf('/login') === -1) {
+        window.location.href = '/login?redirect=' + encodeURIComponent(currentUrl);
+      }
     }
     return Promise.reject(error)
   }
