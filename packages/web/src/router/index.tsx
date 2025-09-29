@@ -1,6 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
-import Home from '@/views/Home';
-import About from '@/views/About';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Login from '@/views/Login';
 import NotFound from '@/views/NotFound';
 import { PrivateRoute } from './auth/PrivateRoute';
@@ -35,11 +33,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: '/',
-            element: <Home />,
-          },
-          {
-            path: '/about',
-            element: <About />,
+            element: <Navigate to="/book/query" replace />,
           },
           {
             path: '/user',

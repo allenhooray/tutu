@@ -30,12 +30,9 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
         <nav className="hidden md:flex items-center space-x-4">
           {isAuthenticated ? (
             <>
-              <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
-                首页
-              </Link>
-              <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
-                关于
-              </Link>
+              {/* <Link to="/book/query" className="text-sm font-medium hover:text-primary transition-colors">
+                图书查询
+              </Link> */}
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
