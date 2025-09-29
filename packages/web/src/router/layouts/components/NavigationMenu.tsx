@@ -21,9 +21,9 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
 
   return (
     <header className={`border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-40 ${className}`}>
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center space-x-2">
-          <h2 className="text-xl font-semibold">图图 Web</h2>
+          <h2 className="text-xl font-semibold">图图</h2>
         </div>
 
         {/* 桌面导航 */}
