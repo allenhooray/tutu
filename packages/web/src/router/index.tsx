@@ -49,7 +49,7 @@ const router = createBrowserRouter([
             path: '/book',
             children: [
               {
-                path: 'detail',
+                path: ':id',
                 element: <BookDetailView />,
               },
               {
