@@ -49,11 +49,11 @@ const router = createBrowserRouter([
             path: '/book',
             children: [
               {
-                path: '/detail',
+                path: 'detail',
                 element: <BookDetailView />,
               },
               {
-                path: '/query',
+                path: 'query',
                 element: <BookQueryView />,
               },
             ]
