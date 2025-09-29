@@ -4,9 +4,9 @@ import NotFound from '@/views/NotFound';
 import { PrivateRoute } from './auth/PrivateRoute';
 import { FullLayout } from './layouts/FullLayout';
 import { TopNavigationLayout } from './layouts/TopNavigationLayout';
-import { User } from '@/views/User';
 import { BookDetailView } from '@/views/Book/Detail';
 import { BookQueryView } from '@/views/Book/Query';
+import { UserMeView } from '@/views/User/Me';
 
 const router = createBrowserRouter([
   // 全屏
@@ -37,7 +37,12 @@ const router = createBrowserRouter([
           },
           {
             path: '/user',
-            element: <User />,
+            children: [
+              {
+                path: 'me',
+                element: <UserMeView />,
+              },
+            ]
           },
           {
             path: '/book',
